@@ -1,21 +1,25 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { Bars4Icon } from "@heroicons/react/16/solid"
 
 export default function Home() {
-  const { open, toggleSidebar } = useSidebar()
+  const { isMobile } = useSidebar()
   return (
     <div
-      className={cn("ml-[var(--sidebar-width)] transition-all", {
-        "ml-0": !open,
-      })}
+      className={cn(
+        "pl-[var(--sidebar-width)] grid place-items-center relative h-full transition-all",
+        {
+          "pl-0": isMobile,
+        }
+      )}
     >
-      <Button variant={"ghost"} onClick={toggleSidebar}>
-        <Bars4Icon />
-      </Button>
+      <article className="space-y-4">
+        <h2 className="text-muted-foreground">KChat Web</h2>
+        <span className="text-muted-foreground">
+          Send and receive message without your phone!
+        </span>
+      </article>
     </div>
   )
 }
