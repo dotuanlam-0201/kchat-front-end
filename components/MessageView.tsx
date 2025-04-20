@@ -35,6 +35,7 @@ const MessageView = () => {
     setIsOverlay(false)
     dragCounter.current = 0
   }
+
   return (
     <section
       ref={ref}
@@ -42,7 +43,7 @@ const MessageView = () => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={"h-full relative p-4 border-l-1 w-full flex-col bg-cover"}
+      className={"h-full flex relative p-4 border-l-1 w-full flex-col bg-cover"}
     >
       <Overlay isOverlay={isOverlay} />
       <MessageViewHeader />

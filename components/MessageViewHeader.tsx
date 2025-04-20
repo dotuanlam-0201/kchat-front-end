@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import getFallbackAvatar from "@/lib/getFallbackAvatar"
+import getFallbackAvatar from "@/lib/functions/getFallbackAvatar"
 import { Cog6ToothIcon } from "@heroicons/react/24/solid"
 
 const MessageViewHeader = () => {

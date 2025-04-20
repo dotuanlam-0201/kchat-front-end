@@ -45,6 +45,7 @@ const Message = ({ isMe }: IMessageProps) => {
           >
             <span className="text-muted-foreground">16:04</span>
             <MessageSeenMarker isSeen />
+            <MessageSeenMarker isSeen={false} />
             <MessageEmotion />
           </footer>
         </article>
@@ -58,7 +59,7 @@ export default Message
 import MessageEmotion from "@/components/MessageEmotion"
 import MessageSeenMarker from "@/components/MessageSeenMarker"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import getFallbackAvatar from "@/lib/getFallbackAvatar"
+import getFallbackAvatar from "@/lib/functions/getFallbackAvatar"
 import { cn } from "@/lib/utils"
 import { ReactNode } from "react"
 

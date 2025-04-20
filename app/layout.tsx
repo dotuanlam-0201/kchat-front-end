@@ -1,8 +1,10 @@
-import AppSidebar from "@/components/AppSidebar"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { SidebarProvider } from "@/components/ui/sidebar"
-import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import { ToastContainer } from "react-toastify"
+
+import ReactQueryProvider from "@/components/ReactQueryProvider"
+import { Metadata } from "next"
 import "./globals.css"
 
 const poppins = Inter({
@@ -23,14 +25,12 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body className={`${poppins.className}  antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SidebarProvider>
-            <main className="w-full">
-              <AppSidebar />
-              {children}
-            </main>
-          </SidebarProvider>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <SidebarProvider>{children}</SidebarProvider>
+            <ToastContainer limit={3} stacked />
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   )

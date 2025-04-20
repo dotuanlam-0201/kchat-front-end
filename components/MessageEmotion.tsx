@@ -23,8 +23,8 @@ const MessageEmotion = ({ emotion }: { emotion?: string }) => {
             <Button
               key={i}
               size={"sm"}
-              className="rounded-full hover:scale-110 size-10 text-xl"
               variant={"ghost"}
+              className="rounded-full hover:text-3xl hover:mx-2 duration-300 size-10 text-2xl"
             >
               {emoji}
             </Button>
@@ -51,11 +51,11 @@ const MessageEmotion = ({ emotion }: { emotion?: string }) => {
       }
     >
       <PopoverTrigger asChild>
-        <span className="text-lg cursor-pointer flex justify-center items-center bg-muted size-7 rounded-full bottom-[-20px] left-[-20px] absolute">
+        <span className="text-lg text-muted-foreground cursor-pointer w-fit h-fit bg-muted size-7 rounded-full bottom-[-12px] left-[-12px] absolute">
           {emotion ?? <FaceIcon />}
         </span>
       </PopoverTrigger>
-      <PopoverContent className="p-0 transition-all w-fit">
+      <PopoverContent side="bottom" className="p-0 w-fit">
         {renderContent()}
       </PopoverContent>
     </Popover>
