@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { getCookie } from "cookies-next/client";
 
 export const http = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -6,7 +7,20 @@ export const http = axios.create({
   validateStatus(status) {
     return status >= 200 && status < 400
   },
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
+
+http.interceptors.request.use(function (config) {
+  // Do something before request is sent
+  const accessToken = getCookie('accessToken')
+  config.headers['Authorization'] = accessToken
+  return config;
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
 
 http.interceptors.response.use((data: AxiosResponse) => {
   return data.data

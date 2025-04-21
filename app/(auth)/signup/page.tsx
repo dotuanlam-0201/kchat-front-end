@@ -52,7 +52,7 @@ const SignupPage = () => {
     }
   }
   return (
-    <Card className="w-ful">
+    <Card className="shadow-2xl">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Signup your new account</CardDescription>

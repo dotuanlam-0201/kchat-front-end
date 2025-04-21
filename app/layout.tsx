@@ -26,7 +26,13 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <body className={`${poppins.className}  antialiased`}>
         <ReactQueryProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            storageKey="theme"
+            disableTransitionOnChange
+          >
             <SidebarProvider>{children}</SidebarProvider>
             <ToastContainer limit={3} stacked />
           </ThemeProvider>

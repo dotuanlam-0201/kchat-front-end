@@ -1,4 +1,3 @@
-import { getCookie } from 'cookies-next/client'
 import { includes } from 'lodash'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -9,14 +8,12 @@ export function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  const accessToken = getCookie("accessToken")
+  const accessToken = req.cookies.get("accessToken")?.value
   if (!accessToken) {
     return NextResponse.redirect(new URL("/login", req.url))
   }
-
   return NextResponse.next()
 }
-
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',

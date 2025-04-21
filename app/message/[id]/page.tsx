@@ -3,7 +3,7 @@
 import MainLayoutWithSidebar from "@/components/MainLayoutWithSidebar"
 import MessageView from "@/components/MessageView"
 import { useSidebar } from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/functions/cn"
 
 const MassageDetail = () => {
   const { isMobile } = useSidebar()

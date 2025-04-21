@@ -5,8 +5,8 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useSidebar } from "@/components/ui/sidebar"
 import { useSocket } from "@/hooks/useSocket"
+import { cn } from "@/lib/functions/cn"
 import { messageSchema } from "@/lib/types/zodSchema"
-import { cn } from "@/lib/utils"
 import {
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,

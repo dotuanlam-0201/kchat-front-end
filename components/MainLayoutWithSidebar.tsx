@@ -1,3 +1,5 @@
+"use client"
+
 import AppSidebar from "@/components/AppSidebar"
 import { ReactNode } from "react"
 

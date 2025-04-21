@@ -43,10 +43,8 @@ const LoginPage = () => {
   const onLogin = async (values: z.infer<typeof loginSchema>) => {
     try {
       const res = await mutateAsync(values)
-      if (res.data.accessToken) {
-        setCookie("accessToken", res.data.accessToken)
-        router.push("/")
-      }
+      setCookie("accessToken", res.data.accessToken)
+      router.push("/")
     } catch (error: any) {
       toast(error?.message, {
         type: "error",
@@ -54,7 +52,7 @@ const LoginPage = () => {
     }
   }
   return (
-    <Card>
+    <Card className="shadow-2xl">
       <CardHeader>
         <CardTitle>Login</CardTitle>
         <CardDescription>

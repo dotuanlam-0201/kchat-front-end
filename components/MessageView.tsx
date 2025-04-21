@@ -4,7 +4,7 @@ import MessageViewAction from "@/components/MessageViewAction"
 import MessageViewContent from "@/components/MessageViewContent"
 import MessageViewHeader from "@/components/MessageViewHeader"
 import useScrollToBottom from "@/hooks/useScrollToBottom"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/functions/cn"
 import { DragEvent, useRef, useState } from "react"
 
 const MessageView = () => {

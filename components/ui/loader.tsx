@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/functions/cn"
 import { ClassValue } from "clsx"
 
 const Loader = ({ className }: { className?: ClassValue }) => {

@@ -1,3 +1,9 @@
+import MessageEmotion from "@/components/MessageEmotion"
+import MessageSeenMarker from "@/components/MessageSeenMarker"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { cn } from "@/lib/functions/cn"
+import getFallbackAvatar from "@/lib/functions/getFallbackAvatar"
+import { ReactNode } from "react"
 interface IMessageProps {
   isMe: boolean
 }
@@ -55,13 +61,6 @@ const Message = ({ isMe }: IMessageProps) => {
 }
 
 export default Message
-
-import MessageEmotion from "@/components/MessageEmotion"
-import MessageSeenMarker from "@/components/MessageSeenMarker"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import getFallbackAvatar from "@/lib/functions/getFallbackAvatar"
-import { cn } from "@/lib/utils"
-import { ReactNode } from "react"
 
 const MessageContainer = ({
   children,

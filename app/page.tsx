@@ -3,7 +3,7 @@
 import { Icon } from "@/components/icons"
 import MainLayoutWithSidebar from "@/components/MainLayoutWithSidebar"
 import { useSidebar } from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/functions/cn"
 
 export default function Home() {
   const { isMobile } = useSidebar()
