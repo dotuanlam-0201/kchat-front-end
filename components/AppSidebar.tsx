@@ -18,165 +18,20 @@ import {
 } from "@/components/ui/sidebar"
 import UserInfo from "@/components/UserInfo"
 import { useSocket } from "@/hooks/useSocket"
+import { useQueryRooms } from "@/lib/actions/room.query"
 import { useQueryMe } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
-import { map } from "lodash"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { useEffect } from "react"
-
-// Menu items.
-const rooms = [
-  {
-    roomId: "room-1",
-    avatarURL: "https://example.com/avatars/avatar-1.png",
-    name: "Room 1",
-    lastMessage: "Hello from Room 1!",
-    lastMessageAt: "09:30",
-  },
-  {
-    roomId: "room-2",
-    avatarURL: "https://example.com/avatars/avatar-2.png",
-    name: "Room 2",
-    lastMessage: "Hello from Room 2!",
-    lastMessageAt: "09:29",
-  },
-  {
-    roomId: "room-3",
-    avatarURL: "https://example.com/avatars/avatar-3.png",
-    name: "Room 3",
-    lastMessage: "Hello from Room 3!",
-    lastMessageAt: "09:28",
-  },
-  {
-    roomId: "room-4",
-    avatarURL: "https://example.com/avatars/avatar-4.png",
-    name: "Room 4",
-    lastMessage: "Hello from Room 4!",
-    lastMessageAt: "09:27",
-  },
-  {
-    roomId: "room-5",
-    avatarURL: "https://example.com/avatars/avatar-5.png",
-    name: "Room 5",
-    lastMessage: "Hello from Room 5!",
-    lastMessageAt: "09:26",
-  },
-  {
-    roomId: "room-6",
-    avatarURL: "https://example.com/avatars/avatar-6.png",
-    name: "Room 6",
-    lastMessage: "Hello from Room 6!",
-    lastMessageAt: "09:25",
-  },
-  {
-    roomId: "room-7",
-    avatarURL: "https://example.com/avatars/avatar-7.png",
-    name: "Room 7",
-    lastMessage: "Hello from Room 7!",
-    lastMessageAt: "09:24",
-  },
-  {
-    roomId: "room-8",
-    avatarURL: "https://example.com/avatars/avatar-8.png",
-    name: "Room 8",
-    lastMessage: "Hello from Room 8!",
-    lastMessageAt: "09:23",
-  },
-  {
-    roomId: "room-9",
-    avatarURL: "https://example.com/avatars/avatar-9.png",
-    name: "Room 9",
-    lastMessage: "Hello from Room 9!",
-    lastMessageAt: "09:22",
-  },
-  {
-    roomId: "room-10",
-    avatarURL: "https://example.com/avatars/avatar-10.png",
-    name: "Room 10",
-    lastMessage: "Hello from Room 10!",
-    lastMessageAt: "09:21",
-  },
-  {
-    roomId: "room-11",
-    avatarURL: "https://example.com/avatars/avatar-11.png",
-    name: "Room 11",
-    lastMessage: "Hello from Room 11!",
-    lastMessageAt: "09:20",
-  },
-  {
-    roomId: "room-12",
-    avatarURL: "https://example.com/avatars/avatar-12.png",
-    name: "Room 12",
-    lastMessage: "Hello from Room 12!",
-    lastMessageAt: "09:19",
-  },
-  {
-    roomId: "room-13",
-    avatarURL: "https://example.com/avatars/avatar-13.png",
-    name: "Room 13",
-    lastMessage: "Hello from Room 13!",
-    lastMessageAt: "09:18",
-  },
-  {
-    roomId: "room-14",
-    avatarURL: "https://example.com/avatars/avatar-14.png",
-    name: "Room 14",
-    lastMessage: "Hello from Room 14!",
-    lastMessageAt: "09:17",
-  },
-  {
-    roomId: "room-15",
-    avatarURL: "https://example.com/avatars/avatar-15.png",
-    name: "Room 15",
-    lastMessage: "Hello from Room 15!",
-    lastMessageAt: "09:16",
-  },
-  {
-    roomId: "room-16",
-    avatarURL: "https://example.com/avatars/avatar-16.png",
-    name: "Room 16",
-    lastMessage: "Hello from Room 16!",
-    lastMessageAt: "09:15",
-  },
-  {
-    roomId: "room-17",
-    avatarURL: "https://example.com/avatars/avatar-17.png",
-    name: "Room 17",
-    lastMessage: "Hello from Room 17!",
-    lastMessageAt: "09:14",
-  },
-  {
-    roomId: "room-18",
-    avatarURL: "https://example.com/avatars/avatar-18.png",
-    name: "Room 18",
-    lastMessage: "Hello from Room 18!",
-    lastMessageAt: "09:13",
-  },
-  {
-    roomId: "room-19",
-    avatarURL: "https://example.com/avatars/avatar-19.png",
-    name: "Room 19",
-    lastMessage: "Hello from Room 19!",
-    lastMessageAt: "09:12",
-  },
-  {
-    roomId: "room-20",
-    avatarURL: "https://example.com/avatars/avatar-20.png",
-    name: "Room 20",
-    lastMessage: "Hello from Room 20!",
-    lastMessageAt: "09:11",
-  },
-]
+import { IRoom } from "@/lib/model/room"
+import { ROOM_TYPE } from "@/lib/types/room"
+import { useRoomStore } from "@/zustand/store"
+import { find, map } from "lodash"
 
 const AppSidebar = () => {
-  const { socket } = useSocket()
+  const { data: rooms, isFetching } = useQueryRooms()
   const {
     data: { data },
   } = useQueryMe()
-  useEffect(() => {
-    return () => {}
-  }, [])
+  const { selectedRoom } = useRoomStore()
 
   return (
     <Sidebar className="border-r-1" collapsible="icon" variant="inset">
@@ -199,8 +54,8 @@ const AppSidebar = () => {
         <SidebarGroup className="flex-1">
           <SidebarGroupContent>
             <SidebarMenu>
-              {map(rooms, (room, i) => {
-                const isActive = i === 0
+              {map(rooms?.data, (room, i) => {
+                const isActive = room._id === selectedRoom._id
                 return <Room key={i} isActive={isActive} room={room} />
               })}
             </SidebarMenu>
@@ -218,50 +73,64 @@ const AppSidebar = () => {
 
 export default AppSidebar
 
-const Room = ({ room, isActive }: { room: any; isActive: boolean }) => {
-  const { id } = useParams()
+const Room = ({ room, isActive }: { room: IRoom; isActive: boolean }) => {
   const { isMobile, toggleSidebar } = useSidebar()
   const { socket } = useSocket()
-  const handleSelectChatRoom = (roomId: string) => {
+  const {
+    data: { data },
+  } = useQueryMe()
+  const { setSelectedRoom } = useRoomStore()
+
+  const handleSelectChatRoom = () => {
     if (isMobile) toggleSidebar()
-    socket.emit("joinRoom", roomId)
+    socket.emit("joinRoom", room._id)
+    setSelectedRoom(room)
   }
 
-  useEffect(() => {
-    if (id) socket.emit("joinRoom", id as string)
-  }, [id])
-
-  const { roomId, avatarURL, name, lastMessage, lastMessageAt } = room
-  return (
-    <Link href={`/room/${roomId}`}>
+  const renderRoomSingle = () => {
+    const user = find(room.participants, ({ _id }) => _id !== data._id)
+    return (
       <SidebarMenuItem className="h-fit">
         <SidebarMenuButton
-          onClick={() => handleSelectChatRoom(roomId)}
+          onClick={() => handleSelectChatRoom()}
           className={cn(
-            "h-fit rounded-2xl items-center transition-all flex gap-2",
+            "h-fit rounded-sm items-center transition-all flex gap-2",
             {
               "bg-muted": isActive,
             }
           )}
         >
-          <Avatar className="size-10 sm:size-12">
-            <AvatarImage src={avatarURL} />
+          <Avatar className="size-10 border sm:size-12">
+            <AvatarImage src={""} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
           <div className="flex-1 flex overflow-hidden flex-col gap-2">
-            <span className="font-bold">{name}</span>
+            <span className="font-bold">{user?.phoneNumber}</span>
             <p className="text-muted-foreground truncate text-nowrap">
-              {lastMessage}
+              'lastmessage'
             </p>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <span className="text-muted-foreground">{lastMessageAt}</span>
+          <div className="flex flex-col items-end gap-2">
+            <span className="text-muted-foreground">last seen</span>
             <Badge className="rounded-full">2</Badge>
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>
-    </Link>
-  )
+    )
+  }
+
+  const renderRoomGroup = () => {
+    return "group"
+  }
+
+  switch (room.type) {
+    case ROOM_TYPE.single:
+      return renderRoomSingle()
+    case ROOM_TYPE.group:
+      return renderRoomGroup()
+    default:
+      return null
+  }
 }

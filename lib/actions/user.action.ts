@@ -1,7 +1,6 @@
 import { http } from "@/lib/configs/axios"
-import { User, Users } from "@/lib/model/user"
+import { IUser, User, Users } from "@/lib/model/user"
 import { IResponse } from "@/lib/types"
-import { TypePartialUser } from "@/lib/types/response/user"
 
 export const getUsers = () => {
   try {
@@ -12,7 +11,7 @@ export const getUsers = () => {
 }
 export const getMe = () => {
   try {
-    return http.get('/users/me') as Promise<IResponse<TypePartialUser>>
+    return http.get('/users/me') as Promise<IResponse<IUser>>
   } catch (error) {
     return new User()
   }

@@ -1,15 +1,11 @@
 import Message from "@/components/Message"
 import { useSocket } from "@/hooks/useSocket"
-import { useParams } from "next/navigation"
 import { useEffect } from "react"
 
 const MessageViewContent = () => {
   const { socket, isConnected } = useSocket()
-  const { id } = useParams()
   useEffect(() => {
-    socket.on("getMessages", (msg) => {
-      alert(`${id}: ${msg}`)
-    })
+    socket.on("getMessages", (msg: string) => {})
     return () => {
       socket.off("getMessages")
     }

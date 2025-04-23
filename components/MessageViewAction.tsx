@@ -7,6 +7,7 @@ import { useSidebar } from "@/components/ui/sidebar"
 import { useSocket } from "@/hooks/useSocket"
 import { cn } from "@/lib/functions/cn"
 import { messageSchema } from "@/lib/types/zodSchema"
+import { useRoomStore } from "@/zustand/store"
 import {
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
@@ -14,14 +15,13 @@ import {
 } from "@heroicons/react/24/solid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { trim } from "lodash"
-import { useParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 const MessageViewAction = () => {
-  const { id } = useParams()
   const { isMobile, toggleSidebar } = useSidebar()
   const { socket } = useSocket()
+  const { selectedRoom } = useRoomStore()
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
     defaultValues: {
@@ -33,7 +33,7 @@ const MessageViewAction = () => {
     const { message } = values
     if (!trim(message)) return
     socket.emit("sendMessage", {
-      roomId: id as string,
+      roomId: selectedRoom._id,
       message: message,
     })
     form.reset()

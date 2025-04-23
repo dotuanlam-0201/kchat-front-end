@@ -1,20 +1,34 @@
 import { IResponse } from "@/lib/types";
-import { TypePartialUser } from "@/lib/types/response/user";
 import { HttpStatusCode } from "axios";
 
-export class Users implements IResponse<TypePartialUser[]> {
-  data: TypePartialUser[];
+export interface IUser {
+  email: string;        // required, unique
+  avatarURL: string;   // optional
+  displayName: string;
+  _id: string
+  phoneNumber: string
+}
+
+
+export class Users implements IResponse<IUser[]> {
+  data: IUser[];
   status: HttpStatusCode;
   constructor() {
     this.status = HttpStatusCode.BadRequest
     this.data = []
   }
 }
-export class User implements IResponse<TypePartialUser> {
-  data: TypePartialUser;
+export class User implements IResponse<IUser> {
+  data: IUser;
   status: HttpStatusCode;
   constructor() {
     this.status = HttpStatusCode.BadRequest
-    this.data = {}
+    this.data = {
+      email: '',
+      avatarURL: '',
+      displayName: '',
+      _id: '',
+      phoneNumber: '',
+    }
   }
 }
