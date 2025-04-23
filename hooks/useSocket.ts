@@ -1,6 +1,5 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
 import { io, type Socket } from "socket.io-client";
 
 interface IMessagePayload {
@@ -44,9 +43,6 @@ export const useSocket = () => {
     }
     const handleError = () => {
       router.push("/")
-      toast('Server is broken, please try again!', {
-        type: 'error',
-      })
       setIsError(true)
     }
 

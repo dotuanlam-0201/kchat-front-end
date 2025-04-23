@@ -5,14 +5,14 @@ import { TypePartialUser } from "@/lib/types/response/user"
 
 export const getUsers = () => {
   try {
-    return http.get('/user') as Promise<Users>
+    return http.get('/users') as Promise<Users>
   } catch (error) {
     return new Users()
   }
 }
 export const getMe = () => {
   try {
-    return http.get('/user/me') as Promise<IResponse<TypePartialUser>>
+    return http.get('/users/me') as Promise<IResponse<TypePartialUser>>
   } catch (error) {
     return new User()
   }

@@ -5,7 +5,7 @@ import { TypePartialUser } from "@/lib/types/response/user"
 const UserInfo = ({ user }: { user: TypePartialUser }) => {
   return (
     <div className="flex gap-3 items-center">
-      <Avatar className="size-12 border-3 border-primary">
+      <Avatar className="size-12">
         <AvatarImage src={user.avatarURL} />
         <AvatarFallback>{getFallbackAvatar(user.displayName)}</AvatarFallback>
       </Avatar>

@@ -9,7 +9,6 @@ import {
   Cog6ToothIcon,
   MoonIcon,
   SunIcon,
-  UserIcon,
 } from "@heroicons/react/24/solid"
 import { deleteCookie } from "cookies-next/client"
 import { useTheme } from "next-themes"
@@ -33,11 +32,11 @@ const MainSetting = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit flex flex-col gap-2">
+        {/* <Button variant={"ghost"}>
+          Profile <UserIcon />
+        </Button> */}
         <Button onClick={handleChangeThem} variant={"ghost"}>
           Theme {theme === "light" ? <SunIcon /> : <MoonIcon />}
-        </Button>
-        <Button variant={"ghost"}>
-          Profile <UserIcon />
         </Button>
         <Button onClick={handleLogout} variant={"ghost"}>
           Logout <ArrowTurnDownRightIcon />

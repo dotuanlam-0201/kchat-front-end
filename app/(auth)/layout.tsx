@@ -6,7 +6,7 @@ const AuthLayout = ({
   children: React.ReactNode
 }>) => {
   return (
-    <BackgroundBeamsWithCollision className="min-h-screen">
+    <BackgroundBeamsWithCollision className="min-h-dvh">
       {children}
     </BackgroundBeamsWithCollision>
   )

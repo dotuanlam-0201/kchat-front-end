@@ -233,7 +233,7 @@ const Room = ({ room, isActive }: { room: any; isActive: boolean }) => {
 
   const { roomId, avatarURL, name, lastMessage, lastMessageAt } = room
   return (
-    <Link href={`/message/${roomId}`}>
+    <Link href={`/room/${roomId}`}>
       <SidebarMenuItem className="h-fit">
         <SidebarMenuButton
           onClick={() => handleSelectChatRoom(roomId)}
