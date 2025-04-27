@@ -4,6 +4,8 @@ export const Icon = {
   AppLogo: (props: TypeSvgIconProps) => (
     <svg
       {...props}
+      width="250"
+      height="250"
       viewBox="0 0 152 38"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
@@ -38,6 +40,8 @@ export const Icon = {
       xmlns="http://www.w3.org/2000/svg"
       x="0"
       y="0"
+      width="250"
+      height="250"
       viewBox="0 0 256 256"
       xmlSpace="preserve"
     >

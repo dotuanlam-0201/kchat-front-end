@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useSidebar } from "@/components/ui/sidebar"
+import { useQueryCache } from "@/hooks/useQueryCache"
 import { useSocket } from "@/hooks/useSocket"
+import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
+import { User } from "@/lib/model/user"
 import { messageSchema } from "@/lib/types/zodSchema"
 import { useRoomStore } from "@/zustand/store"
 import {
@@ -21,6 +24,10 @@ import { z } from "zod"
 const MessageViewAction = () => {
   const { isMobile, toggleSidebar } = useSidebar()
   const { socket } = useSocket()
+  const currentUser = useQueryCache<User>({
+    key: QUERY_ME_KEY,
+    initValue: new User(),
+  })
   const { selectedRoom } = useRoomStore()
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -33,8 +40,9 @@ const MessageViewAction = () => {
     const { message } = values
     if (!trim(message)) return
     socket.emit("sendMessage", {
+      author: currentUser.data._id,
       roomId: selectedRoom._id,
-      message: message,
+      text: message,
     })
     form.reset()
   }

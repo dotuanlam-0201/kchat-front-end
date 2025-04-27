@@ -10,7 +10,7 @@ import { DragEvent, useRef, useState } from "react"
 const MessageView = () => {
   const dragCounter = useRef(0)
   const [isOverlay, setIsOverlay] = useState(false)
-  const [ref] = useScrollToBottom()
+  const { ref } = useScrollToBottom()
 
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()

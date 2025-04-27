@@ -6,26 +6,31 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import UserInfo from "@/components/UserInfo"
+import { useQueryCache } from "@/hooks/useQueryCache"
 import { addRoom } from "@/lib/actions/room"
-import { useQueryMe, useQueryUsers } from "@/lib/actions/user.query"
+import { QUERY_ROOMS_KEY } from "@/lib/actions/room.query"
+import { QUERY_ME_KEY, useQueryUsers } from "@/lib/actions/user.query"
 import { isSuccess } from "@/lib/functions/isSuccess"
-import { TypePartialUser } from "@/lib/types/response/user"
+import { reFetchQuery } from "@/lib/functions/refetchQuery"
+import { IUser, User } from "@/lib/model/user"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { useMutation } from "@tanstack/react-query"
 import { filter, map } from "lodash"
-import { useRouter } from "next/navigation"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { toast } from "react-toastify"
 
 const PopupNewConversation = () => {
   const { data } = useQueryUsers()
-  const { isPending, mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: addRoom,
   })
-  const router = useRouter()
-  const { data: currentUser } = useQueryMe()
+  const currentUser = useQueryCache<User>({
+    key: QUERY_ME_KEY,
+    initValue: new User(),
+  })
+  const [visiblePopup, setVisiblePopup] = useState(false as boolean)
 
-  const onCreateConversation = async (user: TypePartialUser) => {
+  const onCreateConversation = async (user: IUser) => {
     if (!user._id || !currentUser.data._id) {
       toast("User not found!")
       return
@@ -36,7 +41,10 @@ const PopupNewConversation = () => {
         message: [],
         type: "single",
       })
-      if (isSuccess(res)) router.replace(`room/${res.data._id}`)
+      if (isSuccess(res)) {
+        setVisiblePopup(false)
+        reFetchQuery(QUERY_ROOMS_KEY)
+      }
     } catch (error: any) {
       toast(error?.message, {
         type: "error",
@@ -46,17 +54,18 @@ const PopupNewConversation = () => {
 
   const listUsers = useMemo(
     () =>
-      filter(
-        data.data,
-        (user: TypePartialUser) => user.email !== currentUser.data.email
-      ),
+      filter(data.data, (user: IUser) => user.email !== currentUser.data.email),
     [data.data, currentUser.data]
   )
 
   return (
-    <Dialog>
+    <Dialog open={visiblePopup} onOpenChange={setVisiblePopup}>
       <DialogTrigger asChild>
-        <Button size={"sm"} variant={"secondary"}>
+        <Button
+          onClick={() => setVisiblePopup(true)}
+          size={"sm"}
+          variant={"secondary"}
+        >
           <PlusIcon /> Chat
         </Button>
       </DialogTrigger>
@@ -64,8 +73,9 @@ const PopupNewConversation = () => {
         <DialogTitle>Start new conversation</DialogTitle>
 
         <div>
-          {map(listUsers, (user: TypePartialUser) => (
+          {map(listUsers, (user: IUser) => (
             <Button
+              isPending={isPending}
               onClick={() => onCreateConversation(user)}
               key={user._id}
               className="w-full h-fit text-start justify-start"

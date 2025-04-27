@@ -16,21 +16,26 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Skeleton } from "@/components/ui/skeleton"
 import UserInfo from "@/components/UserInfo"
+import { useQueryCache } from "@/hooks/useQueryCache"
 import { useSocket } from "@/hooks/useSocket"
 import { useQueryRooms } from "@/lib/actions/room.query"
-import { useQueryMe } from "@/lib/actions/user.query"
+import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
 import { IRoom } from "@/lib/model/room"
+import { User } from "@/lib/model/user"
 import { ROOM_TYPE } from "@/lib/types/room"
 import { useRoomStore } from "@/zustand/store"
 import { find, map } from "lodash"
+import { useState } from "react"
 
 const AppSidebar = () => {
   const { data: rooms, isFetching } = useQueryRooms()
-  const {
-    data: { data },
-  } = useQueryMe()
+  const currentUser: User = useQueryCache<User>({
+    key: QUERY_ME_KEY,
+    initValue: new User(),
+  })
   const { selectedRoom } = useRoomStore()
 
   return (
@@ -38,7 +43,7 @@ const AppSidebar = () => {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="flex items-center justify-between gap-4">
-            <Icon.AppLogo className="text-primary max-w-30 rounded-full" />
+            <Icon.AppLogo className="text-primary max-h-10 max-w-30 rounded-full" />
 
             <nav className="space-x-3">
               <PopupNewConversation />
@@ -56,14 +61,21 @@ const AppSidebar = () => {
             <SidebarMenu>
               {map(rooms?.data, (room, i) => {
                 const isActive = room._id === selectedRoom._id
-                return <Room key={i} isActive={isActive} room={room} />
+                return (
+                  <Room
+                    isFetching={isFetching}
+                    key={i}
+                    isActive={isActive}
+                    room={room}
+                  />
+                )
               })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup className="sticky backdrop-blur-md rounded-3xl bottom-0">
           <SidebarGroupContent>
-            <UserInfo user={data} />
+            <UserInfo user={currentUser.data} />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
@@ -73,13 +85,24 @@ const AppSidebar = () => {
 
 export default AppSidebar
 
-const Room = ({ room, isActive }: { room: IRoom; isActive: boolean }) => {
+const Room = ({
+  room,
+  isActive,
+  isFetching,
+}: {
+  room: IRoom
+  isActive: boolean
+  isFetching: boolean
+}) => {
   const { isMobile, toggleSidebar } = useSidebar()
   const { socket } = useSocket()
-  const {
-    data: { data },
-  } = useQueryMe()
+  const currentUser: User = useQueryCache<User>({
+    key: QUERY_ME_KEY,
+    initValue: new User(),
+  })
   const { setSelectedRoom } = useRoomStore()
+
+  const [lastMessage, setLastMessage] = useState(room.lastMessage)
 
   const handleSelectChatRoom = () => {
     if (isMobile) toggleSidebar()
@@ -88,7 +111,10 @@ const Room = ({ room, isActive }: { room: IRoom; isActive: boolean }) => {
   }
 
   const renderRoomSingle = () => {
-    const user = find(room.participants, ({ _id }) => _id !== data._id)
+    const user = find(
+      room.participants,
+      ({ _id }) => _id !== currentUser.data._id
+    )
     return (
       <SidebarMenuItem className="h-fit">
         <SidebarMenuButton
@@ -106,9 +132,11 @@ const Room = ({ room, isActive }: { room: IRoom; isActive: boolean }) => {
           </Avatar>
 
           <div className="flex-1 flex overflow-hidden flex-col gap-2">
-            <span className="font-bold">{user?.phoneNumber}</span>
+            <span className="font-bold">
+              {user?.displayName ?? user?.email}
+            </span>
             <p className="text-muted-foreground truncate text-nowrap">
-              'lastmessage'
+              {lastMessage.text}
             </p>
           </div>
 
@@ -124,6 +152,24 @@ const Room = ({ room, isActive }: { room: IRoom; isActive: boolean }) => {
   const renderRoomGroup = () => {
     return "group"
   }
+
+  if (isFetching)
+    return (
+      <SidebarMenuItem className="h-fit">
+        <SidebarMenuButton
+          className={cn(
+            "h-fit rounded-sm items-center transition-all flex gap-2"
+          )}
+        >
+          <Skeleton className="size-10 rounded-full border sm:size-12"></Skeleton>
+
+          <div className="flex-1 flex overflow-hidden flex-col gap-2">
+            <Skeleton className="w-full h-4" />
+            <Skeleton className="w-full h-4" />
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    )
 
   switch (room.type) {
     case ROOM_TYPE.single:

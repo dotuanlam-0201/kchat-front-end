@@ -11,7 +11,7 @@ export const useRoomStore = create<IRoomState>()((set) => ({
   selectedRoom: {
     _id: '',
     participants: [],
-    message: [],
+    lastMessage: {},
     type: ROOM_TYPE.single
   },
   setSelectedRoom: (room: IRoom) => set({ selectedRoom: room })

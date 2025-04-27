@@ -1,14 +1,24 @@
 import MessageEmotion from "@/components/MessageEmotion"
 import MessageSeenMarker from "@/components/MessageSeenMarker"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useQueryCache } from "@/hooks/useQueryCache"
+import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
 import getFallbackAvatar from "@/lib/functions/getFallbackAvatar"
+import { IMessage } from "@/lib/model/message"
+import { User } from "@/lib/model/user"
+import { isEqual } from "lodash"
 import { ReactNode } from "react"
 interface IMessageProps {
-  isMe: boolean
+  message: IMessage
 }
 
-const Message = ({ isMe }: IMessageProps) => {
+const Message = ({ message }: IMessageProps) => {
+  const currentUser = useQueryCache<User>({
+    key: QUERY_ME_KEY,
+    initValue: new User(),
+  })
+  const isMe = isEqual(currentUser.data._id, message?.author?._id)
   return (
     <MessageContainer isMe={isMe}>
       <div
@@ -21,7 +31,7 @@ const Message = ({ isMe }: IMessageProps) => {
       >
         <Avatar className="size-10">
           <AvatarFallback>{getFallbackAvatar("Do Tuan Lam")}</AvatarFallback>
-          <AvatarImage />
+          <AvatarImage src={message?.author?.avatarURL} />
         </Avatar>
 
         <article
@@ -32,16 +42,7 @@ const Message = ({ isMe }: IMessageProps) => {
             }
           )}
         >
-          <p className="break-words text-sm">
-            The most used version of Lorem Ipsum? « Lorem ipsum dolor sit amet,
-            consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrum
-            exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid
-            ex ea commodi consequatur. Quis aute iure reprehenderit in voluptate
-            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-            obcaecat cupiditat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum. »
-          </p>
+          <p className="break-words text-sm">{message.text}</p>
 
           <footer
             className={cn("flex relative gap-1 items-center text-xs", {

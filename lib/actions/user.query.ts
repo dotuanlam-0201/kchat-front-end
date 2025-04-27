@@ -1,4 +1,4 @@
-import { getMe, getUsers } from "@/lib/actions/user.action"
+import { getMe, getUsers } from "@/lib/actions/user"
 import { User, Users } from "@/lib/model/user"
 import { useQuery } from "@tanstack/react-query"
 
