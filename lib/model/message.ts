@@ -3,12 +3,14 @@ import { IResponse } from "@/lib/types";
 import { HttpStatusCode } from "axios";
 
 export interface IMessage {
+  _id?: string
   author?: IUser;
   roomId?: string;
   text?: string;
   fileURL?: string;
   imgURL?: string;
-  emotions?: string[];
+  reactions?: string[];
+  createdAt?: string
 }
 
 export interface IMessagePayload extends Omit<IMessage, 'author'> {

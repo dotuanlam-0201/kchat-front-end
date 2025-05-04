@@ -11,9 +11,9 @@ interface ClientToServerEvents {
 }
 interface ServerToClientEvents {
   getMessages: (message: IMessage) => void;
-  getLastMessage: (message: IMessage) => void;
   userTyping: (userId: string) => void;
   onlineUsers: (users: string[]) => void;
+  updateLastMessage: (data: { roomId: string, lastMessage: IMessage }) => void;
 }
 
 export type TypeSocketEvent = ClientToServerEvents & ServerToClientEvents

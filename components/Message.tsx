@@ -1,23 +1,23 @@
 import MessageEmotion from "@/components/MessageEmotion"
-import MessageSeenMarker from "@/components/MessageSeenMarker"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useQueryCache } from "@/hooks/useQueryCache"
 import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
-import getFallbackAvatar from "@/lib/functions/getFallbackAvatar"
+import dayjs from "@/lib/functions/dayjs"
 import { IMessage } from "@/lib/model/message"
 import { User } from "@/lib/model/user"
 import { isEqual } from "lodash"
-import { ReactNode } from "react"
+import { ReactNode, useState } from "react"
 interface IMessageProps {
   message: IMessage
+  prevMessage: IMessage
 }
 
-const Message = ({ message }: IMessageProps) => {
+const Message = ({ message, prevMessage }: IMessageProps) => {
   const currentUser = useQueryCache<User>({
     key: QUERY_ME_KEY,
     initValue: new User(),
   })
+  const [isOpenPopupReact, setIsOpenPopupReact] = useState(false)
   const isMe = isEqual(currentUser.data._id, message?.author?._id)
   return (
     <MessageContainer isMe={isMe}>
@@ -29,12 +29,9 @@ const Message = ({ message }: IMessageProps) => {
           }
         )}
       >
-        <Avatar className="size-10">
-          <AvatarFallback>{getFallbackAvatar("Do Tuan Lam")}</AvatarFallback>
-          <AvatarImage src={message?.author?.avatarURL} />
-        </Avatar>
-
         <article
+          onMouseOver={() => setIsOpenPopupReact(true)}
+          onMouseLeave={() => setIsOpenPopupReact(false)}
           className={cn(
             "rounded-sm backdrop-blur-3xl bg-muted space-y-2 shadow-xl p-2",
             {
@@ -50,10 +47,14 @@ const Message = ({ message }: IMessageProps) => {
               "text-start": isMe,
             })}
           >
-            <span className="text-muted-foreground">16:04</span>
-            <MessageSeenMarker isSeen />
-            <MessageSeenMarker isSeen={false} />
-            <MessageEmotion />
+            <span className="text-muted-foreground text-[10px]">
+              {dayjs(message.createdAt).format("HH:mm")}
+            </span>
+            <MessageEmotion
+              open={isOpenPopupReact}
+              reactions={message.reactions}
+            />
+            ?
           </footer>
         </article>
       </div>

@@ -5,31 +5,39 @@ import { useRoomStore } from '@/zustand/store'
 import { isArray } from 'lodash'
 import { useEffect, useState } from 'react'
 
-const useSocketMessages = () => {
+const useSocketServerSide = () => {
   const { socket, isConnected } = useSocket()
   const { selectedRoom } = useRoomStore()
   const {
     data: { data },
   } = useQueryMessages(selectedRoom._id)
 
+
   useEffect(() => {
     if (isArray(data)) setMessages(data)
   }, [JSON.stringify(data)])
 
   const [messages, setMessages] = useState([] as Array<IMessage>)
+  const [lastMessageFromSocket, setLastMessageFromSocket] = useState({} as IMessage)
+
 
   useEffect(() => {
     socket.on("getMessages", (msg: IMessage) => {
       setMessages((prev) => [...prev, msg])
     })
+    socket.on('updateLastMessage', (msg: IMessage) => {
+      setLastMessageFromSocket(msg)
+    })
     return () => {
-      socket.off('getLastMessage')
+      socket.off('updateLastMessage')
+      socket.off('getMessages')
     }
   }, [])
 
   return {
     messages,
+    lastMessageFromSocket
   }
 }
 
-export default useSocketMessages
+export default useSocketServerSide
