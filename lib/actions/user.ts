@@ -7,3 +7,6 @@ export const getUsers = async (): Promise<Users> => {
 export const getMe = async (): Promise<User> => {
   return await http.get('/users/me')
 }
+export const updateUser = async (dto: Record<string, any>): Promise<User> => {
+  return await http.put('/users/update', dto)
+}

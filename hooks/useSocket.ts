@@ -8,12 +8,14 @@ interface ClientToServerEvents {
   joinRoom: (roomId: string) => void;
   leaveRoom: (roomId: string) => void;
   typing: (data: { roomId: string, userId: string }) => void;
+  reactMessage: (data: IMessagePayload) => void;
 }
 interface ServerToClientEvents {
   getMessages: (message: IMessage) => void;
   userTyping: (userId: string) => void;
   onlineUsers: (users: string[]) => void;
   updateLastMessage: (data: { roomId: string, lastMessage: IMessage }) => void;
+  updateLastMessageWithReaction: (data: { roomId: string, lastMessage: IMessage }) => void;
 }
 
 export type TypeSocketEvent = ClientToServerEvents & ServerToClientEvents

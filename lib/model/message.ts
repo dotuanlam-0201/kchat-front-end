@@ -13,6 +13,10 @@ export interface IMessage {
   createdAt?: string
 }
 
+export interface ILastMessage extends IMessage {
+  isNewMessage?: boolean
+}
+
 export interface IMessagePayload extends Omit<IMessage, 'author'> {
   author: string
 }

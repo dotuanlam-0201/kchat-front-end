@@ -1,3 +1,4 @@
+import PopupProfile from "@/components/PopupProfile"
 import { Button } from "@/components/ui/button"
 import {
   Popover,
@@ -32,9 +33,7 @@ const MainSetting = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit flex flex-col gap-2">
-        {/* <Button variant={"ghost"}>
-          Profile <UserIcon />
-        </Button> */}
+        <PopupProfile />
         <Button onClick={handleChangeThem} variant={"ghost"}>
           Theme {theme === "light" ? <SunIcon /> : <MoonIcon />}
         </Button>

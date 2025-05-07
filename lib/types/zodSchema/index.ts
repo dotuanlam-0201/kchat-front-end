@@ -35,3 +35,27 @@ export const signupSchema = loginSchema.extend({
     })
   }
 })
+
+export const UserProfileSchema = z.object({
+  email: z.string()
+    .email('Invalid email format')
+    .min(1, 'Email is required'),
+
+  avatarURL: z.string()
+    .url('Avatar URL must be a valid URL')
+    .optional(),
+
+  displayName: z.string()
+    .min(1, 'Display name is required')
+    .max(50, 'Display name cannot exceed 50 characters'),
+  phoneNumber: z.string()
+}).superRefine((data, ctx) => {
+  // Validate phone number using the phone library
+  if (!phone(data.phoneNumber, { country: 'VN' }).isValid) {
+    ctx.addIssue({
+      message: 'Phone Number not valid !',
+      code: 'custom',
+      path: ["phoneNumber"]
+    })
+  }
+});

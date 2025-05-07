@@ -13,9 +13,10 @@ const useLastMessage = ({
     key: QUERY_ME_KEY,
     initValue: new User()
   })
-  const { lastMessageFromSocket } = useSocketServerSide()
-  const lastMessage = lastMessageFromSocket.roomId === room._id ? lastMessageFromSocket : room.lastMessage
-  const isNewMessage = lastMessageFromSocket.roomId === room._id && lastMessageFromSocket.author?._id !== data._id
+  const { lastMessage: lastMessageSocket } = useSocketServerSide()
+  const lastMessage = lastMessageSocket.roomId === room._id ? lastMessageSocket : room.lastMessage
+  const isNewMessage = lastMessageSocket.roomId === room._id && lastMessageSocket.author?._id !== data._id
+
   return { lastMessage, isNewMessage }
 }
 
