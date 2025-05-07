@@ -25,10 +25,7 @@ const MessageViewContent = () => {
               isRender={isRenderDaySeparator}
               message={message}
             />
-            <Message
-              prevMessage={i > 0 ? messages[i - 1] : message}
-              message={message}
-            />
+            <Message message={message} />
           </Fragment>
         )
       })}

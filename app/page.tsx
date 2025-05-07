@@ -9,7 +9,7 @@ import { cn } from "@/lib/functions/cn"
 import { useRoomStore } from "@/zustand/store"
 
 export default function Home() {
-  const { isMobile, toggleSidebar } = useSidebar()
+  const { isMobile } = useSidebar()
   const { selectedRoom } = useRoomStore()
   useQueryMe()
   return (

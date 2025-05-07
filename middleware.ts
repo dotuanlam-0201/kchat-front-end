@@ -1,10 +1,9 @@
-import { includes } from 'lodash'
 import { NextRequest, NextResponse } from 'next/server'
 
 const publicRoutes = ['/login', '/signup']
 
 export function middleware(req: NextRequest) {
-  if (includes(publicRoutes, req.nextUrl.pathname)) {
+  if (publicRoutes.includes(req.nextUrl.pathname)) {
     return NextResponse.next()
   }
 
