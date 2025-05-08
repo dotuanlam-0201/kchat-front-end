@@ -40,7 +40,6 @@ const PopupNewConversation = () => {
         participants: [user._id, currentUser.data._id],
         message: [],
         type: "single",
-        lastMessage: "",
       })
       if (isSuccess(res)) {
         setVisiblePopup(false)
