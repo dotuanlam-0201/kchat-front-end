@@ -22,7 +22,7 @@ export type TypeSocketEvent = ClientToServerEvents & ServerToClientEvents
 
 const socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
   transports: ["websocket"],
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 export const useSocket = () => {
