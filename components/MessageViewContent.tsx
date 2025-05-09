@@ -16,7 +16,7 @@ const MessageViewContent = () => {
   }
 
   return (
-    <div className={"space-y-4 flex-1 flex flex-col pt-8 pb-10"}>
+    <div className={"space-y-4 flex-1 flex flex-col pt-8 pb-20"}>
       {messages.map((message: IMessage, i) => {
         const isRenderDaySeparator = handleRenderDaySeparator(message, i)
         return (

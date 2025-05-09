@@ -1,5 +1,4 @@
 import { IMessage, IMessagePayload } from '@/lib/model/message';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { io, type Socket } from "socket.io-client";
 
@@ -22,14 +21,12 @@ export type TypeSocketEvent = ClientToServerEvents & ServerToClientEvents
 
 const socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
   transports: ["websocket"],
-  // withCredentials: true,
 });
 
 export const useSocket = () => {
   const socketRef = useRef<Socket<TypeSocketEvent>>(socketInstance)
   const [isConnected, setIsConnected] = useState(false);
   const [isError, setIsError] = useState(false)
-  const router = useRouter();
 
 
   useEffect(() => {
@@ -45,7 +42,6 @@ export const useSocket = () => {
       setIsConnected(false)
     }
     const handleError = () => {
-      router.push("/")
       setIsError(true)
     }
 
