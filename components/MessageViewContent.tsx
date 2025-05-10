@@ -16,7 +16,7 @@ const MessageViewContent = () => {
   }
 
   return (
-    <div className={"space-y-4 flex-1 flex flex-col pt-8 pb-10"}>
+    <div className={"space-y-4 flex-1 flex flex-col pt-8 pb-20"}>
       {messages.map((message: IMessage, i) => {
         const isRenderDaySeparator = handleRenderDaySeparator(message, i)
         return (
@@ -25,10 +25,7 @@ const MessageViewContent = () => {
               isRender={isRenderDaySeparator}
               message={message}
             />
-            <Message
-              prevMessage={i > 0 ? messages[i - 1] : message}
-              message={message}
-            />
+            <Message message={message} />
           </Fragment>
         )
       })}

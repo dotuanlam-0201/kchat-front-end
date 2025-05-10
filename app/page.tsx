@@ -1,39 +1,17 @@
 "use client"
 
+import HomePageWithoutMessage from "@/components/HomePageWithoutMessage"
 import MainLayoutWithSidebar from "@/components/MainLayoutWithSidebar"
 import MessageView from "@/components/MessageView"
-import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/ui/sidebar"
 import { useQueryMe } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
-import HomeLottie from "@/lottie/home.json"
 import { useRoomStore } from "@/zustand/store"
-import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/solid"
-import Lottie from "lottie-react"
 
 export default function Home() {
-  const { isMobile, toggleSidebar } = useSidebar()
+  const { isMobile } = useSidebar()
   const { selectedRoom } = useRoomStore()
   useQueryMe()
-  const renderWithoutRoom = () => {
-    return (
-      <article className="space-y-4 p-5 flex flex-col">
-        <Lottie animationData={HomeLottie} loop={true} />
-        <h1 className="text-muted-foreground">KChat Web</h1>
-        <span className="text-muted-foreground">
-          Send and receive message without your phone!
-        </span>
-        <Button
-          className="flex sm:hidden"
-          onClick={toggleSidebar}
-          variant={"secondary"}
-          size={"lg"}
-        >
-          <ChatBubbleBottomCenterIcon /> Start Conversation
-        </Button>
-      </article>
-    )
-  }
   return (
     <MainLayoutWithSidebar>
       <div
@@ -44,7 +22,7 @@ export default function Home() {
           }
         )}
       >
-        {selectedRoom._id ? <MessageView /> : renderWithoutRoom()}
+        {selectedRoom._id ? <MessageView /> : <HomePageWithoutMessage />}
       </div>
     </MainLayoutWithSidebar>
   )

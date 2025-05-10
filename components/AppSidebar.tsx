@@ -37,7 +37,6 @@ const AppSidebar = () => {
             <Icon.AppLogo className="text-primary max-h-10 max-w-30 rounded-full" />
             <nav className="space-x-3">
               <PopupNewConversation />
-              <MainSetting />
             </nav>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -65,7 +64,7 @@ const AppSidebar = () => {
         </SidebarGroup>
         <SidebarGroup className="sticky backdrop-blur-md rounded-3xl bottom-0">
           <SidebarGroupContent>
-            <UserInfo user={currentUser.data} />
+            <UserInfo rightSide={<MainSetting />} user={currentUser.data} />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

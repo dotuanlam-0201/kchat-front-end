@@ -1,4 +1,3 @@
-import MessageEmotion from "@/components/MessageEmotion"
 import { useQueryCache } from "@/hooks/useQueryCache"
 import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
@@ -6,19 +5,18 @@ import dayjs from "@/lib/functions/dayjs"
 import { IMessage } from "@/lib/model/message"
 import { User } from "@/lib/model/user"
 import { isEqual } from "lodash"
-import { ReactNode, useState } from "react"
+import { ReactNode } from "react"
 interface IMessageProps {
   message: IMessage
-  prevMessage: IMessage
 }
 
-const Message = ({ message, prevMessage }: IMessageProps) => {
+const Message = ({ message }: IMessageProps) => {
   const currentUser = useQueryCache<User>({
     key: QUERY_ME_KEY,
     initValue: new User(),
   })
-  const [isOpenPopupReact, setIsOpenPopupReact] = useState(false)
   const isMe = isEqual(currentUser.data._id, message?.author?._id)
+
   return (
     <MessageContainer isMe={isMe}>
       <div
@@ -30,8 +28,6 @@ const Message = ({ message, prevMessage }: IMessageProps) => {
         )}
       >
         <article
-          onMouseOver={() => setIsOpenPopupReact(true)}
-          onMouseLeave={() => setIsOpenPopupReact(false)}
           className={cn(
             "rounded-sm backdrop-blur-3xl bg-muted space-y-2 shadow-xl p-2",
             {
@@ -50,11 +46,7 @@ const Message = ({ message, prevMessage }: IMessageProps) => {
             <span className="text-muted-foreground text-[10px]">
               {dayjs(message.createdAt).format("HH:mm")}
             </span>
-            <MessageEmotion
-              open={isOpenPopupReact}
-              reactions={message.reactions}
-            />
-            ?
+            {/* <MessageEmotion message={message} reactions={message.reactions} /> */}
           </footer>
         </article>
       </div>
@@ -73,7 +65,7 @@ const MessageContainer = ({
 }) => {
   return (
     <div
-      className={cn("flex", {
+      className={cn("flex group", {
         "justify-end": isMe,
       })}
     >

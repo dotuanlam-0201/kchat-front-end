@@ -1,3 +1,5 @@
+"use client"
+
 import { Dock, DockIcon } from "@/components/magicui/dock"
 import { Button } from "@/components/ui/button"
 import {
@@ -5,28 +7,47 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useQueryCache } from "@/hooks/useQueryCache"
+import { useSocket } from "@/hooks/useSocket"
+import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
-import data from "@emoji-mart/data"
+import { IMessage, IMessagePayload } from "@/lib/model/message"
+import { User } from "@/lib/model/user"
 import Picker from "@emoji-mart/react"
 import { FaceIcon, PlusIcon } from "@radix-ui/react-icons"
-import { first, get, map } from "lodash"
+import { concat, first, get, isArray, map } from "lodash"
 import { useTheme } from "next-themes"
 import { useState } from "react"
 
 const MessageEmotion = ({
   reactions,
-  open,
+  message,
 }: {
   reactions?: string[]
-  open: boolean
+  message: IMessage
 }) => {
+  const { socket } = useSocket()
   const { theme } = useTheme()
   const [isDefault, setIsDefault] = useState(true)
   const [selected, setSelected] = useState(first(reactions))
-  const [visiblePopup, setVisiblePopup] = useState(open)
+  const [visiblePopup, setVisiblePopup] = useState(false)
   const popularEmojis = ["😂", "❤️", "😍", "🤣", "🙏"]
+  const { data } = useQueryCache<User>({
+    key: QUERY_ME_KEY,
+    initValue: new User(),
+  })
 
   const handleSelectEmoji = (emoji: string) => {
+    const payloadSocket = {
+      ...message,
+      ...{
+        reactions: isArray(message.reactions)
+          ? concat(message.reactions, [emoji])
+          : [emoji],
+      },
+      author: data._id,
+    } as IMessagePayload
+    socket.emit("reactMessage", payloadSocket)
     setSelected(emoji)
     setVisiblePopup(false)
   }
@@ -61,6 +82,7 @@ const MessageEmotion = ({
       )
     return (
       <Picker
+        selected={selected}
         theme={theme}
         data={data}
         onEmojiSelect={(e: any) => handleSelectEmoji(get(e, "native", ""))}
@@ -78,12 +100,12 @@ const MessageEmotion = ({
         }, 100)
       }}
     >
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <span
           className={cn(
-            "text-lg bg-muted text-muted-foreground cursor-pointer w-fit h-fit size-7 rounded-full bottom-[-20px] right-[-20px] absolute hidden justify-center items-center",
+            "text-lg bg-muted text-muted-foreground cursor-pointer w-fit h-fit size-7 rounded-full bottom-[-20px] right-[-20px] absolute hidden justify-center items-center group-hover:flex",
             {
-              flex: open,
+              flex: Boolean(selected),
             }
           )}
         >
