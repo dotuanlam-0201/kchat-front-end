@@ -1,5 +1,5 @@
 import { IMessage, IMessagePayload } from '@/lib/model/message';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { io, type Socket } from "socket.io-client";
 
 interface ClientToServerEvents {
@@ -19,24 +19,21 @@ interface ServerToClientEvents {
 
 export type TypeSocketEvent = ClientToServerEvents & ServerToClientEvents
 
-const socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
+const socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   transports: ["websocket"],
+  autoConnect: true,
+  reconnection: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000
 });
 
 export const useSocket = () => {
-  const socketRef = useRef<Socket<TypeSocketEvent>>(socketInstance)
+  const [socket] = useState(socketInstance)
   const [isConnected, setIsConnected] = useState(false);
   const [isError, setIsError] = useState(false)
 
 
   useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
-      transports: ["websocket"], // Best practice: force WebSocket if possible
-      withCredentials: true,
-    });
-
-    socketRef.current = socket;
-
     const handleConnect = () => setIsConnected(true);
     const handleDisconnect = () => {
       setIsConnected(false)
@@ -56,7 +53,7 @@ export const useSocket = () => {
     };
   }, []);
 
-  return { socket: socketRef.current, isConnected, isError };
+  return { socket, isConnected, isError };
 }
 
 
