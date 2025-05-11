@@ -18,6 +18,14 @@ export class Users implements IResponse<IUser[]> {
     this.data = []
   }
 }
+export class OnlineUsers implements IResponse<string[]> {
+  data: [];
+  status: HttpStatusCode;
+  constructor() {
+    this.status = HttpStatusCode.BadRequest
+    this.data = []
+  }
+}
 export class User implements IResponse<IUser> {
   data: IUser;
   status: HttpStatusCode;

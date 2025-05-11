@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [new URL('https://myfirstportfolio.s3.amazonaws.com/**')],
+  }
 };
 
 export default nextConfig;

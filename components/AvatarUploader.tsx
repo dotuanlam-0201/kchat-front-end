@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import getFallbackAvatar from "@/lib/functions/getFallbackAvatar"
 import { IUser } from "@/lib/model/user"
-import { IMAGE_TYPES, MAX_SIZE_IMAGE } from "@/lib/types/upload"
+import { ALLOWED_IMAGES_TYPES, MAX_SIZE_IMAGE } from "@/lib/types/upload"
 import { first, includes } from "lodash"
 import { ChangeEvent, Fragment, useRef } from "react"
 import { toast } from "react-toastify"
@@ -29,7 +29,7 @@ const AvatarUploader = ({
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = first(e.target.files)
     if (!file) return
-    const isValidType = includes(IMAGE_TYPES, file.type)
+    const isValidType = includes(ALLOWED_IMAGES_TYPES, file.type)
     if (!isValidType) {
       toast(`Image not valid type!`, { type: "error" })
       return

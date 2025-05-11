@@ -19,12 +19,13 @@ interface ServerToClientEvents {
 
 export type TypeSocketEvent = ClientToServerEvents & ServerToClientEvents
 
-const socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
+let socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
   transports: ["websocket"],
   autoConnect: true,
   reconnection: true,
   reconnectionAttempts: 5,
-  reconnectionDelay: 1000
+  reconnectionDelay: 1000,
+  auth: {}
 });
 
 export const useSocket = () => {
@@ -32,9 +33,10 @@ export const useSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isError, setIsError] = useState(false)
 
-
   useEffect(() => {
-    const handleConnect = () => setIsConnected(true);
+    const handleConnect = () => {
+      setIsConnected(true)
+    };
     const handleDisconnect = () => {
       setIsConnected(false)
     }

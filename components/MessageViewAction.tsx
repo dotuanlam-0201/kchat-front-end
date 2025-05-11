@@ -1,5 +1,6 @@
 "use client"
 
+import FileUploader from "@/components/FileUploader"
 import PopupEmojiPicker from "@/components/PopupEmojiPicker"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
@@ -8,21 +9,32 @@ import { useSidebar } from "@/components/ui/sidebar"
 import { useQueryCache } from "@/hooks/useQueryCache"
 import { useSocket } from "@/hooks/useSocket"
 import { QUERY_ME_KEY } from "@/lib/actions/user.query"
+import { uploadFile } from "@/lib/actions/utils"
 import { cn } from "@/lib/functions/cn"
 import { User } from "@/lib/model/user"
 import { messageSchema } from "@/lib/types/zodSchema"
 import { useRoomStore } from "@/zustand/store"
-import { ChatBubbleLeftRightIcon, PhotoIcon } from "@heroicons/react/24/solid"
+import {
+  ArrowPathIcon,
+  ChatBubbleLeftRightIcon,
+  PhotoIcon,
+} from "@heroicons/react/24/solid"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { trim } from "lodash"
 import { useTheme } from "next-themes"
 import { useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 import { z } from "zod"
 
 const MessageViewAction = () => {
   const { theme } = useTheme()
   const { isMobile, toggleSidebar } = useSidebar()
   const { socket } = useSocket()
+  const { isPending, mutateAsync, isError } = useMutation({
+    mutationFn: uploadFile,
+  })
+
   const currentUser = useQueryCache<User>({
     key: QUERY_ME_KEY,
     initValue: new User(),
@@ -57,6 +69,20 @@ const MessageViewAction = () => {
     form.setValue("message", currentMsg + e)
   }
 
+  const onFileChange = async (file: File) => {
+    try {
+      const res = await mutateAsync(file)
+      socket.emit("sendMessage", {
+        author: currentUser.data._id,
+        roomId: selectedRoom._id,
+        fileURL: res.data.url,
+        text: "",
+      })
+    } catch (error) {
+      toast("Upload failed!", { type: "error" })
+    }
+  }
+
   return (
     <footer className="sticky gap-3 flex items-center bottom-4">
       <Button
@@ -74,19 +100,26 @@ const MessageViewAction = () => {
       </Button>
 
       <div className="relative gap-3 flex items-center w-full">
-        <Button
-          aria-label="Attach file"
-          title="Attach file"
-          variant={"secondary"}
-          className="rounded-full border z-1 transition-all size-6 sm:size-10"
-        >
-          <PhotoIcon className="size-3 sm:size-5" />
-        </Button>
+        <FileUploader onFileChange={onFileChange}>
+          <Button
+            aria-label="Attach file"
+            title="Attach file"
+            variant={"secondary"}
+            className="rounded-full border z-1 transition-all size-6 sm:size-10"
+          >
+            {isPending ? (
+              <ArrowPathIcon className="animate-spin" />
+            ) : (
+              <PhotoIcon className="size-3 sm:size-5" />
+            )}
+          </Button>
+        </FileUploader>
 
         <PopupEmojiPicker handleSelectEmoji={handleSelectEmoji} />
 
         <Form {...form}>
           <FormField
+            disabled={isPending}
             control={form.control}
             name="message"
             render={({ field }) => (

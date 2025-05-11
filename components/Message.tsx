@@ -1,3 +1,4 @@
+import MessageFile from "@/components/MessageFile"
 import { useQueryCache } from "@/hooks/useQueryCache"
 import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { cn } from "@/lib/functions/cn"
@@ -32,9 +33,12 @@ const Message = ({ message }: IMessageProps) => {
             "rounded-sm backdrop-blur-3xl bg-muted space-y-2 shadow-xl p-2",
             {
               "bg-primary-foreground": isMe,
+              "bg-transparent": Boolean(message.fileURL),
             }
           )}
         >
+          <MessageFile message={message} />
+
           <p className="break-words text-sm">{message.text}</p>
 
           <footer

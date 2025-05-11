@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import useLastMessage from "@/hooks/useLastMessage"
+import { useOnlineUsers } from "@/hooks/useOnlinUser"
 import { useQueryCache } from "@/hooks/useQueryCache"
 import { useSocket } from "@/hooks/useSocket"
 import { QUERY_ME_KEY } from "@/lib/actions/user.query"
@@ -16,7 +17,7 @@ import { IRoom } from "@/lib/model/room"
 import { User } from "@/lib/model/user"
 import { ROOM_TYPE } from "@/lib/types/room"
 import { useRoomStore } from "@/zustand/store"
-import { find } from "lodash"
+import { find, includes } from "lodash"
 import { useEffect, useState } from "react"
 
 const Room = ({
@@ -54,6 +55,8 @@ const Room = ({
       room.participants,
       ({ _id }) => _id !== currentUser.data._id
     )
+    const { onlineUsers } = useOnlineUsers()
+    const isOnline = includes(onlineUsers, user?._id)
     return (
       <SidebarMenuItem className="h-fit">
         <SidebarMenuButton
@@ -65,7 +68,11 @@ const Room = ({
             }
           )}
         >
-          <Avatar className="size-10 border sm:size-12">
+          <Avatar
+            className={cn("size-10 border sm:size-12", {
+              "border-2 border-primary": isOnline,
+            })}
+          >
             <AvatarImage src={user?.avatarURL} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
