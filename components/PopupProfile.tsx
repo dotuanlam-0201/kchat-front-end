@@ -81,7 +81,7 @@ const PopupProfile = () => {
   const handleAvatarURL = async () => {
     if (!image.file) return data.avatarURL
     const res = await mutateAsync(image.file)
-    if (isSuccess(res)) return res.data.url
+    if (isSuccess(res)) return res.data
     toast("Upload avatar failed", {
       type: "error",
     })

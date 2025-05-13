@@ -1,10 +1,7 @@
 import { http } from "@/lib/configs/axios";
 import { IResponse } from "@/lib/types";
 
-export const uploadFile = async (file: File): Promise<IResponse<{
-  url: string,
-  key: string
-}>> => {
+export const uploadFile = async (file: File): Promise<IResponse<string>> => {
 
   const formData = new FormData()
   formData.append('file', file)

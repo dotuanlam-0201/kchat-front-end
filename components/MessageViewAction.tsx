@@ -75,11 +75,11 @@ const MessageViewAction = () => {
       socket.emit("sendMessage", {
         author: currentUser.data._id,
         roomId: selectedRoom._id,
-        fileURL: res.data.url,
+        fileURL: res.data,
         text: "",
       })
-    } catch (error) {
-      toast("Upload failed!", { type: "error" })
+    } catch (error: any) {
+      toast(error?.message, { type: "error" })
     }
   }
 

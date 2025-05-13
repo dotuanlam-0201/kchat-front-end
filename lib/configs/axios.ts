@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 export const http = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 1000 * 10,
+  timeout: 1000 * 60,
   validateStatus(status) {
     return status >= 200 && status < 400
   },

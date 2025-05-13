@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    remotePatterns: [new URL('https://myfirstportfolio.s3.amazonaws.com/**')],
+    remotePatterns: [new URL('https://myfirstportfolio.s3.amazonaws.com/**'), new URL('http://res.cloudinary.com/**')],
   }
 };
 
