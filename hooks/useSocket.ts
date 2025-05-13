@@ -1,4 +1,5 @@
 import { IMessage, IMessagePayload } from '@/lib/model/message';
+import { getCookie } from 'cookies-next/client';
 import { useEffect, useState } from 'react';
 import { io, type Socket } from "socket.io-client";
 
@@ -25,8 +26,10 @@ let socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
-  auth: {},
-  withCredentials: true
+  withCredentials: true,
+  auth: {
+    "token": getCookie('accessToken')
+  }
 });
 
 export const useSocket = () => {
