@@ -25,7 +25,8 @@ let socketInstance: Socket<TypeSocketEvent> = io(process.env.NEXT_PUBLIC_SOCKET_
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
-  auth: {}
+  auth: {},
+  withCredentials: true
 });
 
 export const useSocket = () => {
