@@ -12,6 +12,7 @@ export default function Home() {
   const { isMobile } = useSidebar()
   const { selectedRoom } = useRoomStore()
   useQueryMe()
+
   return (
     <MainLayoutWithSidebar>
       <div

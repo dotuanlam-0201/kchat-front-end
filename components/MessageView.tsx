@@ -5,12 +5,18 @@ import MessageViewContent from "@/components/MessageViewContent"
 import MessageViewHeader from "@/components/MessageViewHeader"
 import useScrollToBottom from "@/hooks/useScrollToBottom"
 import { cn } from "@/lib/functions/cn"
-import { DragEvent, useRef, useState } from "react"
+import { useRoomStore, useScrollStore } from "@/zustand/store"
+import { DragEvent, useEffect, useRef, useState } from "react"
 
 const MessageView = () => {
   const dragCounter = useRef(0)
   const [isOverlay, setIsOverlay] = useState(false)
   const { ref } = useScrollToBottom()
+  const { enableAutoScroll } = useScrollStore()
+  const { selectedRoom } = useRoomStore()
+  useEffect(() => {
+    enableAutoScroll()
+  }, [selectedRoom._id])
 
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -43,7 +49,7 @@ const MessageView = () => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={"h-full flex relative p-4 border-l-1 w-full flex-col bg-cover"}
+      className={"flex h-full relative p-4 border-l-1 w-full flex-col bg-cover"}
     >
       <Overlay isOverlay={isOverlay} />
       <MessageViewHeader />

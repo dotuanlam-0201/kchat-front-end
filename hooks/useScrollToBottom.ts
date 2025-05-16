@@ -1,18 +1,21 @@
+import { useScrollStore } from '@/zustand/store'
 import { useEffect, useRef } from 'react'
 
 const useScrollToBottom = () => {
   const ref = useRef(null as null | HTMLDivElement)
+  const { autoScrollEnabled } = useScrollStore()
+
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref.current || !autoScrollEnabled) return
     const observer = new ResizeObserver(() => {
       ref.current?.scrollIntoView({
         behavior: 'smooth',
-        block: 'end',
+        block: "end",
       });
     });
     observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [ref.current])
+  }, [ref.current, autoScrollEnabled])
   return { ref }
 }
 

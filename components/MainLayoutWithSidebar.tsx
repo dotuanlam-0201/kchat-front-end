@@ -5,7 +5,7 @@ import { ReactNode } from "react"
 
 const MainLayoutWithSidebar = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="w-full">
+    <main className="w-screen">
       <AppSidebar />
       {children}
     </main>

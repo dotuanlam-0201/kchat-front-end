@@ -12,6 +12,13 @@ interface ILastMessageState {
   setLastMessage: (roomId: string, msg: IMessage) => void
 }
 
+interface IScrollState {
+  autoScrollEnabled: boolean,
+  enableAutoScroll: VoidFunction,
+  disableAutoScroll: VoidFunction,
+  toggleAutoScroll: VoidFunction,
+}
+
 export const useRoomStore = create<IRoomState>()((set) => ({
   selectedRoom: {
     _id: '',
@@ -32,6 +39,12 @@ export const useLastMessageStore = create<ILastMessageState>((set) => ({
   })),
 }))
 
+export const useScrollStore = create<IScrollState>((set) => ({
+  autoScrollEnabled: true,
+  enableAutoScroll: () => set({ autoScrollEnabled: true }),
+  disableAutoScroll: () => set({ autoScrollEnabled: false }),
+  toggleAutoScroll: () => set((state: { autoScrollEnabled: boolean }) => ({ autoScrollEnabled: !state.autoScrollEnabled })),
+}))
 
 
 
