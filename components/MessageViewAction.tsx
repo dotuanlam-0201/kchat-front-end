@@ -13,7 +13,7 @@ import { uploadFile } from "@/lib/actions/utils"
 import { cn } from "@/lib/functions/cn"
 import { User } from "@/lib/model/user"
 import { messageSchema } from "@/lib/types/zodSchema"
-import { useRoomStore } from "@/zustand/store"
+import { useRoomStore, useScrollStore } from "@/zustand/store"
 import {
   ArrowPathIcon,
   ChatBubbleLeftRightIcon,
@@ -34,6 +34,7 @@ const MessageViewAction = () => {
   const { isPending, mutateAsync, isError } = useMutation({
     mutationFn: uploadFile,
   })
+  const { enableAutoScroll } = useScrollStore()
 
   const currentUser = useQueryCache<User>({
     key: QUERY_ME_KEY,
@@ -56,6 +57,7 @@ const MessageViewAction = () => {
       text: message,
     })
     form.reset()
+    enableAutoScroll()
   }
 
   const onKeyDown = (e?: React.KeyboardEvent<HTMLInputElement>) => {
@@ -75,11 +77,11 @@ const MessageViewAction = () => {
       socket.emit("sendMessage", {
         author: currentUser.data._id,
         roomId: selectedRoom._id,
-        fileURL: res.data.url,
+        fileURL: res.data,
         text: "",
       })
-    } catch (error) {
-      toast("Upload failed!", { type: "error" })
+    } catch (error: any) {
+      toast(error?.message, { type: "error" })
     }
   }
 

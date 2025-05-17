@@ -1,12 +1,20 @@
+import FetchMoreMessageListener from "@/components/FetchMoreMessageListener"
+import LoadingMoreMessage from "@/components/LoadingMoreMessage"
 import Message from "@/components/Message"
 import { Badge } from "@/components/ui/badge"
-import useSocketServerSide from "@/hooks/useSocketServerSide"
+import useMessage from "@/hooks/useMessage"
 import dayjs from "@/lib/functions/dayjs"
 import { IMessage } from "@/lib/model/message"
+import { useScrollStore } from "@/zustand/store"
 import { Fragment } from "react"
 
 const MessageViewContent = () => {
-  const { messages } = useSocketServerSide()
+  const { messages, setLimit, isFetched, isFetching } = useMessage()
+  const { disableAutoScroll } = useScrollStore()
+  const handleFetchMoreMessage = () => {
+    disableAutoScroll()
+    setLimit((prev) => prev + 50)
+  }
 
   const handleRenderDaySeparator = (message: IMessage, i: number) => {
     const currentDate = dayjs(message.createdAt).format("YYYY-MM-DD")
@@ -17,6 +25,11 @@ const MessageViewContent = () => {
 
   return (
     <div className={"space-y-4 flex-1 flex flex-col pt-8 pb-20"}>
+      <LoadingMoreMessage isFetching={isFetching} />
+      <FetchMoreMessageListener
+        enabled={isFetched}
+        callback={handleFetchMoreMessage}
+      />
       {messages.map((message: IMessage, i) => {
         const isRenderDaySeparator = handleRenderDaySeparator(message, i)
         return (

@@ -1,41 +1,46 @@
 import { useSocket } from '@/hooks/useSocket'
 import { useQueryMessages } from '@/lib/actions/message.query'
-import { ILastMessage, IMessage } from '@/lib/model/message'
+import { IMessage } from '@/lib/model/message'
 import { useRoomStore } from '@/zustand/store'
 import { isArray } from 'lodash'
 import { useEffect, useState } from 'react'
 
-const useSocketServerSide = () => {
+const useMessage = () => {
   const { socket, isConnected } = useSocket()
-  const { selectedRoom } = useRoomStore()
+  const [limit, setLimit] = useState(50)
+  const { selectedRoom, } = useRoomStore()
   const {
     data: { data },
-  } = useQueryMessages(selectedRoom._id)
+    isFetched,
+    isFetching,
+  } = useQueryMessages(selectedRoom._id, {
+    limit: limit
+  })
 
   useEffect(() => {
-    if (isArray(data)) setMessages(data)
+    if (isArray(data) && isFetched) setMessages(data)
   }, [JSON.stringify(data)])
 
   const [messages, setMessages] = useState([] as Array<IMessage>)
-  const [lastMessage, setLastMessage] = useState({} as ILastMessage)
 
   useEffect(() => {
     socket.on("getMessages", (msg: IMessage) => {
-      if (msg.roomId === selectedRoom._id) setMessages((prev) => [...prev, msg])
-    })
-    socket.on('updateLastMessage', (msg: IMessage) => {
-      setLastMessage(msg)
+      if (msg.roomId === selectedRoom._id) {
+        setMessages((prev) => [...prev, msg])
+      }
     })
     return () => {
-      socket.off('updateLastMessage')
       socket.off('getMessages')
     }
   }, [])
 
   return {
     messages,
-    lastMessage,
+    limit, setLimit,
+    isFetched,
+    isFetching,
+
   }
 }
 
-export default useSocketServerSide
+export default useMessage
