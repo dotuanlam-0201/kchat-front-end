@@ -18,6 +18,7 @@ import { User } from "@/lib/model/user"
 import { ROOM_TYPE } from "@/lib/types/room"
 import { useRoomStore } from "@/zustand/store"
 import { find, includes } from "lodash"
+import { FileDownIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const Room = ({
@@ -79,16 +80,20 @@ const Room = ({
 
           <div className="flex-1 flex overflow-hidden flex-col gap-2">
             <span className="font-bold">
-              {user?.displayName ?? user?.email}
+              {user?.displayName ?? user?.phoneNumber}
             </span>
 
-            <p
-              className={cn("text-muted-foreground truncate text-nowrap", {
-                "font-extrabold": isUnRead,
-              })}
-            >
-              {lastMessage?.text}
-            </p>
+            {lastMessage?.text ? (
+              <p
+                className={cn("text-muted-foreground truncate text-nowrap", {
+                  "font-extrabold": isUnRead,
+                })}
+              >
+                {lastMessage?.text}
+              </p>
+            ) : (
+              <FileDownIcon size={14} />
+            )}
           </div>
 
           <div className="flex gap-2 items-end flex-col">
