@@ -42,7 +42,6 @@ export const UserProfileSchema = z.object({
     .min(1, 'Email is required'),
 
   avatarURL: z.string()
-    .url('Avatar URL must be a valid URL')
     .optional(),
 
   displayName: z.string()

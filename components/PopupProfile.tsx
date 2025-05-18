@@ -61,6 +61,8 @@ const PopupProfile = () => {
   })
 
   const onSave = async (values: z.infer<typeof UserProfileSchema>) => {
+    console.log("🚀 ~ onSave ~ values:", values)
+    alert("clicked")
     const avatarURL = await handleAvatarURL()
     const payload = {
       ...values,

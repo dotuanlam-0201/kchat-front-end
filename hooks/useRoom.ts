@@ -13,7 +13,6 @@ const useRoom = () => {
   const [rooms, setRooms] = useState([] as IRoom[])
 
   const { data: currentUser } = useQueryMe()
-  console.log("🚀 ~ useRoom ~ currentUser:", currentUser)
 
   useEffect(() => {
     if (isArray(data)) setRooms(data)
