@@ -11,7 +11,7 @@ export const useQueryMe = () => {
   return useQuery({
     queryKey: [QUERY_ME_KEY],
     queryFn: getMe,
-    initialData: new User()
+    initialData: new User(),
   })
 }
 

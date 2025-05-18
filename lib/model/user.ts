@@ -30,7 +30,7 @@ export class User implements IResponse<IUser> {
   data: IUser;
   status: HttpStatusCode;
   constructor() {
-    this.status = HttpStatusCode.BadRequest
+    this.status = HttpStatusCode.Ok
     this.data = {
       email: '',
       avatarURL: '',

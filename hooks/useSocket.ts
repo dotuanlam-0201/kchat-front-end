@@ -1,4 +1,5 @@
 import { IMessage, IMessagePayload } from '@/lib/model/message';
+import { IRoom } from '@/lib/model/room';
 import { getCookie } from 'cookies-next/client';
 import { useEffect, useState } from 'react';
 import { io, type Socket } from "socket.io-client";
@@ -13,6 +14,7 @@ interface ClientToServerEvents {
 interface ServerToClientEvents {
   getMessages: (message: IMessage) => void;
   userTyping: (userId: string) => void;
+  roomCreated: (room: IRoom) => void;
   onlineUsers: (users: string[]) => void;
   updateLastMessage: (data: { roomId: string, lastMessage: IMessage }) => void;
   updateLastMessageWithReaction: (data: { roomId: string, lastMessage: IMessage }) => void;

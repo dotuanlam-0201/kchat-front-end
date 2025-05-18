@@ -17,7 +17,6 @@ const Message = ({ message }: IMessageProps) => {
     initValue: new User(),
   })
   const isMe = isEqual(currentUser.data._id, message?.author?._id)
-
   return (
     <MessageContainer isMe={isMe}>
       <div

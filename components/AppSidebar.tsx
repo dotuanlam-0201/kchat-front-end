@@ -14,20 +14,22 @@ import {
 } from "@/components/ui/sidebar"
 import UserInfo from "@/components/UserInfo"
 import { useQueryCache } from "@/hooks/useQueryCache"
-import { useQueryRooms } from "@/lib/actions/room.query"
+import useRoom from "@/hooks/useRoom"
 import { QUERY_ME_KEY } from "@/lib/actions/user.query"
 import { User } from "@/lib/model/user"
 import { useRoomStore } from "@/zustand/store"
 import { map } from "lodash"
 
 const AppSidebar = () => {
-  const { data: rooms, isFetching } = useQueryRooms()
+  const { rooms, isFetching } = useRoom()
   const currentUser: User = useQueryCache<User>({
     key: QUERY_ME_KEY,
     initValue: new User(),
   })
 
   const { selectedRoom } = useRoomStore()
+
+  if (isFetching) return null
 
   return (
     <Sidebar className="border-r-1" collapsible="icon" variant="inset">
@@ -48,7 +50,7 @@ const AppSidebar = () => {
         <SidebarGroup className="flex-1">
           <SidebarGroupContent>
             <SidebarMenu>
-              {map(rooms?.data, (room, i) => {
+              {map(rooms, (room, i) => {
                 const isActive = room._id === selectedRoom._id
                 return (
                   <Room

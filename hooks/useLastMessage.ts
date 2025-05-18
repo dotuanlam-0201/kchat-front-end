@@ -4,7 +4,6 @@ import { QUERY_ME_KEY } from '@/lib/actions/user.query'
 import { ILastMessage, IMessage } from '@/lib/model/message'
 import { IRoom } from '@/lib/model/room'
 import { User } from '@/lib/model/user'
-import { useRoomStore } from '@/zustand/store'
 import { useEffect, useState } from 'react'
 
 const useLastMessage = ({
@@ -12,7 +11,6 @@ const useLastMessage = ({
 }: {
   room: IRoom
 }) => {
-  const { selectedRoom } = useRoomStore()
   const { socket } = useSocket()
   const { data } = useQueryCache<User>({
     key: QUERY_ME_KEY,
@@ -31,6 +29,7 @@ const useLastMessage = ({
       socket.off('updateLastMessage')
     }
   }, [])
+
   return { lastMessage, isNewMessage }
 }
 

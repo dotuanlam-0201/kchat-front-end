@@ -16,7 +16,7 @@ export class Rooms implements IResponse<IRoom[]> {
   status: HttpStatusCode;
   constructor() {
     this.data = []
-    this.status = HttpStatusCode.BadRequest
+    this.status = HttpStatusCode.Ok
   }
 }
 
