@@ -5,7 +5,10 @@ import { useSocket } from './useSocket'; // Import your useSocket hook
 export const useOnlineUsers = () => {
   const { socket } = useSocket();
   const { data: { data } } = useQueryOnlineUsers()
-  const [onlineUsers, setOnlineUsers] = useState<string[]>(data);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([] as string[]);
+  useEffect(() => {
+    setOnlineUsers(data)
+  }, [data])
 
   useEffect(() => {
     const handleOnlineUsers = (users: string[]) => {
