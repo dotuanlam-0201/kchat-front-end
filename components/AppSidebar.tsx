@@ -11,6 +11,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
+  SidebarMenuSkeleton,
 } from "@/components/ui/sidebar"
 import UserInfo from "@/components/UserInfo"
 import { useQueryCache } from "@/hooks/useQueryCache"
@@ -29,7 +30,7 @@ const AppSidebar = () => {
 
   const { selectedRoom } = useRoomStore()
 
-  if (isFetching) return null
+  if (isFetching) return <SidebarSkeleton />
 
   return (
     <Sidebar className="border-r-1" collapsible="icon" variant="inset">
@@ -75,3 +76,31 @@ const AppSidebar = () => {
 }
 
 export default AppSidebar
+
+const SidebarSkeleton = () => {
+  return (
+    <Sidebar className="border-r-1" collapsible="icon" variant="inset">
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent className="flex items-center justify-between gap-4">
+            <Icon.AppLogo className="text-primary max-h-10 max-w-30 rounded-full" />
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <Input className="rounded-2xl" placeholder="Search..." />
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup className="flex-1">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {Array.from({ length: 20 }).map((_, i) => (
+                <SidebarMenuSkeleton key={i} />
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  )
+}
